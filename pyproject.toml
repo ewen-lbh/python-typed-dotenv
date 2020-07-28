@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "typed_dotenv"
+version = "0.1.0"
+description = "Handle .env files with types"
+authors = ["Ewen Le Bihan <hey@ewen.works>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.5"
+python-dotenv = "^0.14.0"
+"ruamel.yaml" = { version = "^0.16.10", optional = true }
+pydantic = { version = "^1.6.1", optional = true }
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.0.0"
+black = "^19.10b0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

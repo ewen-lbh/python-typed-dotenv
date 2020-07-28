@@ -1,0 +1,5 @@
+language: python
+
+steps:
+  build for registry: poetry build
+  publish to registry: poetry publish
