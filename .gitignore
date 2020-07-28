@@ -145,6 +145,7 @@ dmypy.json
 
 # dotENV file
 .env
+!tests/.env
 
 # VSCode config
 .vscode/
