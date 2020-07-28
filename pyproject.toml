@@ -6,10 +6,12 @@ authors = ["Ewen Le Bihan <hey@ewen.works>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.5"
+python = "^3.6"
 python-dotenv = "^0.14.0"
 "ruamel.yaml" = { version = "^0.16.10", optional = true }
 pydantic = { version = "^1.6.1", optional = true }
+toml = {version = "^0.10.1", optional = true}
+parse = "^1.16.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.0.0"
