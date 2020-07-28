@@ -11,7 +11,7 @@ THING=test
         )
         == VALUE_FORMATS.python_literal
     )
-
+def test_detects_value_format_python_eval():
     assert (
         typed_dotenv._get_value_format(
             """
@@ -21,7 +21,7 @@ THINGIE=testie
         )
         == VALUE_FORMATS.python_eval
     )
-
+def test_detects_value_format_yaml_1_1():
     assert (
         typed_dotenv._get_value_format(
             """
@@ -31,7 +31,7 @@ rick=and-morty
         )
         == VALUE_FORMATS.yaml_1_1
     )
-
+def test_detects_value_format_yaml_1_2():
     assert (
         typed_dotenv._get_value_format(
             """
@@ -41,7 +41,7 @@ rick=adn
         )
         == VALUE_FORMATS.yaml_1_2
     )
-
+def test_detects_value_format_toml():
     assert (
         typed_dotenv._get_value_format(
             """
@@ -52,7 +52,7 @@ but_not=True
         )
         == VALUE_FORMATS.toml
     )
-
+def test_detects_value_format_json():
     assert (
         typed_dotenv._get_value_format(
             """
@@ -63,16 +63,16 @@ mort_=is an error
         )
         == VALUE_FORMATS.json
     )
-
+def test_detects_value_format_invalid():
     assert (
         typed_dotenv._get_value_format(
             """
-# valuees: json
+# values: jsoneee
 rick=is not moert
             """
         )
     ) is None
-
+def test_detects_no_value_format():
     assert (
         typed_dotenv._get_value_format(
             """
