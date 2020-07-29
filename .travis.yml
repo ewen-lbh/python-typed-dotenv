@@ -1,0 +1,19 @@
+sudo: false
+language: python
+python: 
+  - '3.6'
+  - '3.7'
+  - '3.8'
+
+before_install:
+  - pip install poetry>=1.0
+  - pip install codecov
+
+install:
+  - poetry install -E all
+
+script:
+  - poetry run pytest --cov=typed_dotenv tests/
+
+after_success:
+  - codecov
