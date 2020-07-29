@@ -145,7 +145,7 @@ def test_parses_toml_dotenv():
 
 def test_parses_json_dotenv():
     result = typed_dotenv.parse(Path(__file__).parent / "json.env")
-    assert result["STRING"] == "String"
+    assert result["STRING"] == "String = test"
     # assert result["SINGLEQUOTED"] == "string (single-quoted)"
     # assert result["UNVALID-PYTHON-IDENTIFIER"] == "True"
     assert result["BOOLEAN_FALSE"] == False
