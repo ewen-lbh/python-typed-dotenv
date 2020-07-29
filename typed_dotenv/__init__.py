@@ -32,10 +32,16 @@ def _get_value_format(contents: str) -> Optional[VALUE_FORMATS]:
     return None
 
 
+def _get_original_value_repr(binding: dotenv.parser.Binding) -> str:
+    return binding.original.string.split("=")[1].lstrip()
+
+
 def parse(filename: Union[str, Path]) -> Dict[str, Any]:
     values_format = _get_value_format(Path(filename).read_text())
 
     bindings = dotenv.parser.parse_stream(Path(filename).open())
+    # Remove comments...
+    bindings = [b for b in bindings if b.key is not None]
     new_bindings = {}
 
     if values_format in (VALUE_FORMATS.yaml_1_1, VALUE_FORMATS.yaml_1_2):
@@ -51,17 +57,60 @@ def parse(filename: Union[str, Path]) -> Dict[str, Any]:
             # version=("1.1" if values_format == VALUE_FORMATS.yaml_1_1 else "1.2"),
         )
 
-        for i, binding in enumerate(bindings):
+        for binding in bindings:
             binding: dotenv.parser.Binding
-            new_bindings[binding.key] = yaml.load(f"v: {binding.value}")["v"]
+            new_bindings[binding.key] = yaml.load(
+                f"v: {_get_original_value_repr(binding)}"
+            )["v"]
+
+    elif values_format == VALUE_FORMATS.toml:
+        try:
+            import toml
+        except ModuleNotFoundError:
+            raise ModuleNotFoundError(
+                f"Please add support for TOML by installing the 'toml' extra: \n\n\tpip install typed_dotenv[toml]"
+            )
+
+        for binding in bindings:
+            binding: dotenv.parser.Binding
+            try:
+                new_bindings[binding.key] = toml.loads(
+                    f"v = {_get_original_value_repr(binding)}"
+                )["v"]
+            except toml.decoder.TomlDecodeError as error:
+                raise toml.decoder.TomlDecodeError(f"Error while parsing {binding.original.string!r}:\n\n\t" + error.msg, doc=error.doc, pos=error.pos)
+
+    elif values_format == VALUE_FORMATS.json:
+        import json
+
+        for binding in bindings:
+            binding: dotenv.parser.Binding
+            try:
+                new_bindings[binding.key] = json.loads(
+                    f'{{"v": {_get_original_value_repr(binding)}}}'
+                )["v"]
+            except json.decoder.JSONDecodeError as error:
+                raise json.decoder.JSONDecodeError(f"Error while parsing {binding.original.string!r}:\n\n\t" + error.msg, doc=error.doc, pos=error.pos)
+
+    elif values_format == VALUE_FORMATS.python_literal:
+        import ast
+
+        for binding in bindings:
+            binding: dotenv.parser.Binding
+            new_bindings[binding.key] = ast.literal_eval(
+                _get_original_value_repr(binding)
+            )
+
     else:
-        for i, binding in enumerate(bindings):
+        for binding in bindings:
             binding: dotenv.parser.Binding
             new_bindings[binding.key] = binding.value
 
     return new_bindings
 
 
-def load(filename: Union[str, Path] = ".env") -> None:
+def load(filename: Union[str, Path] = ".env") -> Dict[str, Any]:
     if not Path(filename).exists():
         raise FileNotFoundError(f"File {filename!r} was not found")
+
+    return parse(filename)
