@@ -33,7 +33,8 @@ def _get_value_format(contents: str) -> Optional[VALUE_FORMATS]:
 
 
 def _get_original_value_repr(binding: dotenv.parser.Binding) -> str:
-    return binding.original.string.split("=")[1].lstrip()
+    _key, *rest = binding.original.string.split("=")
+    return '='.join(rest).lstrip()
 
 
 def parse(filename: Union[str, Path]) -> Dict[str, Any]:
