@@ -160,6 +160,23 @@ def test_parses_json_dotenv():
     assert result["A_EXPONENTIAL"] == 54e15
     assert result["A_FLOAT"] == 544.54
 
+def test_parses_python_literal_dotenv():
+    result = typed_dotenv.parse(Path(__file__).parent / "python_literal.env")
+    assert result["STRING"] == "String"
+    assert result["SINGLEQUOTED"] == "string (single-quoted)"
+    assert result["UNVALID-PYTHON-IDENTIFIER"] == True
+    # assert result["BOOLEAN_FALSE"] == False
+    assert result["ANOTHER_BOOLEAN_FALSE"] == False
+    # assert result["YES"] == "yes"
+    # assert result["Yes"] == "Yes"
+    # assert result["ON"] == "on"
+    # assert result["OFF"] == "off"
+    # assert result["NO"] == "no"
+    assert result["AN_INT"] == 8593
+    # assert result["A_SEXAGECIMAL_INT"] == "12:34:56"
+    assert result["A_EXPONENTIAL"] == 54e15
+    assert result["A_FLOAT"] == 544.54
+
 def test_parses_yaml_1_2_dotenv():
     result = typed_dotenv.parse(Path(__file__).parent / "yaml_1_2.env")
     assert result["STRING"] == "String"
