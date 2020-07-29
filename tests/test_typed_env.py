@@ -110,16 +110,38 @@ without_any="values: comment"
 
 
 def test_parses_regular_dotenv():
-    typed_dotenv.load(Path(__file__).parent / ".env")
-    assert os.getenv("STRING") == "String"
-    assert os.getenv("SINGLEQUOTED") == "string (single-quoted)"
-    assert os.getenv("UNVALID-PYTHON-IDENTIFIER") == "True"
-    assert os.getenv("BOOLEAN_FALSE") == "false"
-    assert os.getenv("ANOTHER_BOOLEAN_FALSE") == "False"
-    assert os.getenv("YES") == "yes"
-    assert os.getenv("ON") == "on"
-    assert os.getenv("OFF") == "off"
-    assert os.getenv("NO") == "no"
+    result = typed_dotenv.parse(Path(__file__).parent / ".env")
+    assert result["STRING"] == "String"
+    assert result["SINGLEQUOTED"] == "string (single-quoted)"
+    assert result["UNVALID-PYTHON-IDENTIFIER"] == "True"
+    assert result["BOOLEAN_FALSE"] == "false"
+    assert result["ANOTHER_BOOLEAN_FALSE"] == "False"
+    assert result["YES"] == "yes"
+    assert result["Yes"] == "Yes"
+    assert result["ON"] == "on"
+    assert result["OFF"] == "off"
+    assert result["NO"] == "no"
+    assert result["AN_INT"] == "8593"
+    assert result["A_SEXAGECIMAL_INT"] == "12:34:56"
+    assert result["A_EXPONENTIAL"] == "54e15"
+    assert result["A_FLOAT"] == "544.54"
+
+def test_parses_yaml_1_2_dotenv():
+    result = typed_dotenv.parse(Path(__file__).parent / "yaml_1_2.env")
+    assert result["STRING"] == "String"
+    assert result["SINGLEQUOTED"] == "string (single-quoted)"
+    assert result["UNVALID-PYTHON-IDENTIFIER"] == True
+    assert result["BOOLEAN_FALSE"] == False
+    assert result["ANOTHER_BOOLEAN_FALSE"] == False
+    assert result["YES"] == "yes"
+    assert result["Yes"] == "Yes"
+    assert result["ON"] == "on"
+    assert result["OFF"] == "off"
+    assert result["NO"] == "no"
+    assert result["AN_INT"] == 8593
+    assert result["A_SEXAGECIMAL_INT"] == "12:34:56"
+    assert result["A_EXPONENTIAL"] == 54e15
+    assert result["A_FLOAT"] == 544.54
 
 def test_raises_exception_when_file_not_found():
     with raises(FileNotFoundError):
