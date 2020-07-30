@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "typed_dotenv"
-version = "1.0.0"
+version = "1.0.1"
 description = "Handle .env files with types"
 authors = ["Ewen Le Bihan <hey@ewen.works>"]
 repository = "https://github.com/ewen-lbh/python-typed-dotenv"
