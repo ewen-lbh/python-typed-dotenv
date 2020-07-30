@@ -51,7 +51,7 @@ assert type(secrets["DEBUG_IN_PRODUCTION"]) is bool
 We used python-style values, but other syntaxes are available:
 
 - `values: yaml 1.2` to use YAML 1.2 literals<sup>`pip install typed_dotenv[yaml]`</sup>
-- `values: yaml 1.1` to use YAML 1.1 literals (with `yes` resolving to `True`, and other [differences from YAML 1.2](https://yaml.readthedocs.io/en/latest/pyyaml.html#defaulting-to-yaml-1-2-support))<sup>`pip install typed_dotenv[yaml]`</sup>
+- `values: yaml 1.1` to use YAML 1.1 literals ([differences from YAML 1.2](https://yaml.readthedocs.io/en/latest/pyyaml.html#defaulting-to-yaml-1-2-support)). **For now, this has the same effect as `values: yaml 1.2`**<sup>`pip install typed_dotenv[yaml]`</sup>
 - `values: toml` to use TOML literals: `12:35:24` resolves to a `datetime.time`, etc.<sup>`pip install typed_dotenv[toml]`</sup>
 - `values: json` to use JSON literals
 
