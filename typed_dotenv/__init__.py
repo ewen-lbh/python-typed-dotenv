@@ -1,7 +1,7 @@
 __version__ = "0.1.0"
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, TypeVar, Union
 
 import dotenv
 from parse import parse as reverse_format
@@ -115,3 +115,15 @@ def load(filename: Union[str, Path] = ".env") -> Dict[str, Any]:
         raise FileNotFoundError(f"File {filename!r} was not found")
 
     return parse(filename)
+
+try:
+    from pydantic import BaseModel
+
+    def load_into(into: BaseModel, filename: Union[str, Path] = ".env") -> BaseModel:
+        if not Path(filename).exists():
+            raise FileNotFoundError(f"File {filename!r} was not found")
+
+        return into(**parse(filename))
+
+except ModuleNotFoundError:
+    pass

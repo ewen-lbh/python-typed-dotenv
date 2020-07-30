@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 import datetime
 from pytest import raises
+from pydantic import BaseModel
 
 import typed_dotenv
 from typed_dotenv import VALUE_FORMATS
@@ -197,3 +198,24 @@ def test_parses_yaml_1_2_dotenv():
 def test_raises_exception_when_file_not_found():
     with raises(FileNotFoundError):
         typed_dotenv.load("unexistant_file")
+    
+    with raises(FileNotFoundError):
+        typed_dotenv.load_into("unexistant_file")
+
+def test_load_into():
+    class ADotEnvModel(BaseModel):
+        STRING: str
+        BOOLEAN_FALSE: bool
+        AN_INT: int
+        A_SEXAGECIMAL_INT: datetime.time
+        A_EXPONENTIAL: int
+        A_FLOAT: float
+
+    result = typed_dotenv.load_into(ADotEnvModel, Path(__file__).parent / "toml.env")
+    assert isinstance(result, ADotEnvModel)
+    assert result.STRING == "String"
+    assert result.BOOLEAN_FALSE == False
+    assert result.AN_INT == 8593
+    assert result.A_SEXAGECIMAL_INT == datetime.time(12, 34, 56)
+    assert result.A_EXPONENTIAL == 54e15
+    assert result.A_FLOAT == 544.54
