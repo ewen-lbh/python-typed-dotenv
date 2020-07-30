@@ -111,7 +111,7 @@ without_any="values: comment"
 
 
 def test_parses_regular_dotenv():
-    result = typed_dotenv.parse(Path(__file__).parent / ".env")
+    result = typed_dotenv._parse(Path(__file__).parent / ".env")
     assert result["STRING"] == "String"
     assert result["SINGLEQUOTED"] == "string (single-quoted)"
     assert result["UNVALID-PYTHON-IDENTIFIER"] == "True"
@@ -128,7 +128,7 @@ def test_parses_regular_dotenv():
     assert result["A_FLOAT"] == "544.54"
 
 def test_parses_toml_dotenv():
-    result = typed_dotenv.parse(Path(__file__).parent / "toml.env")
+    result = typed_dotenv._parse(Path(__file__).parent / "toml.env")
     assert result["STRING"] == "String"
     # assert result["SINGLEQUOTED"] == "string (single-quoted)"
     # assert result["UNVALID-PYTHON-IDENTIFIER"] == "True"
@@ -145,7 +145,7 @@ def test_parses_toml_dotenv():
     assert result["A_FLOAT"] == 544.54
 
 def test_parses_json_dotenv():
-    result = typed_dotenv.parse(Path(__file__).parent / "json.env")
+    result = typed_dotenv._parse(Path(__file__).parent / "json.env")
     assert result["STRING"] == "String = test"
     # assert result["SINGLEQUOTED"] == "string (single-quoted)"
     # assert result["UNVALID-PYTHON-IDENTIFIER"] == "True"
@@ -162,7 +162,7 @@ def test_parses_json_dotenv():
     assert result["A_FLOAT"] == 544.54
 
 def test_parses_python_literal_dotenv():
-    result = typed_dotenv.parse(Path(__file__).parent / "python_literal.env")
+    result = typed_dotenv._parse(Path(__file__).parent / "python_literal.env")
     assert result["STRING"] == "String"
     assert result["SINGLEQUOTED"] == "string (single-quoted)"
     assert result["UNVALID-PYTHON-IDENTIFIER"] == True
@@ -179,7 +179,7 @@ def test_parses_python_literal_dotenv():
     assert result["A_FLOAT"] == 544.54
 
 def test_parses_yaml_1_2_dotenv():
-    result = typed_dotenv.parse(Path(__file__).parent / "yaml_1_2.env")
+    result = typed_dotenv._parse(Path(__file__).parent / "yaml_1_2.env")
     assert result["STRING"] == "String"
     assert result["SINGLEQUOTED"] == "string (single-quoted)"
     assert result["UNVALID-PYTHON-IDENTIFIER"] == True
