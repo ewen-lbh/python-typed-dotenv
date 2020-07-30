@@ -27,7 +27,6 @@ black = "^19.10b0"
 pylint = "^2.5.3"
 pytest-cov = "^2.10.0"
 rope = "^0.17.0"
-chachacha = {git = "https://github.com/ewen-lbh/chachacha"}
 
 [build-system]
 requires = ["poetry>=0.12"]
