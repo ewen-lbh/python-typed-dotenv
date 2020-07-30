@@ -1,5 +1,8 @@
 language: python
 
+commit message: 🔖 Release {new}
+
 steps:
+  bump manifest version: poetry version {bump}
   build for registry: poetry build
-  publish to registry: poetry publish
+  publish to registry: poetry publish --username $PYPI_USERNAME --password $PYPI_PASSWORD
