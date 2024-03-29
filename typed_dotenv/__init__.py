@@ -132,8 +132,6 @@ try:
         if filename is None:
             from os import environ
 
-            print(list(environ.keys()))
-            print(list(into.__fields__.keys()))
             values = {
                 key: coerce(environ[key], syntax=VALUE_FORMATS.yaml_1_2)
                 for key in into.__fields__.keys()
