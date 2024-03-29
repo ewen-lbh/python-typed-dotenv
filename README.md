@@ -72,7 +72,24 @@ class Secrets(BaseModel):
 secrets = typed_dotenv.load_into(Secrets, filename="my_dotenv.env")
 ```
 
-### Using with `os.getenv`
+### Production usage without a dotenv file
+
+You can also use `load_into` with `None` as the filename to load variables from the environment:
+
+```python
+from pydantic import BaseModel
+import typed_dotenv
+
+class Secrets(BaseModel):
+    GITHUB_TOKEN: str
+    DEBUG_IN_PRODUCTION: bool
+
+secrets = typed_dotenv.load_into(Secrets, filename=None)
+```
+
+In that case, the value syntax will always be `YAML 1.2` (we need a format that allows raw strings, since env variables are unquoted).
+
+### Manually coerce from `os.getenv` calls
 
 You might still want to load these values as environment variables, but need to get type coersion. This time, since the value is gotten via `os.getenv`, _typed_dotenv_ does not know the file's contents. The syntax used is thus declared when coercing types:
 
