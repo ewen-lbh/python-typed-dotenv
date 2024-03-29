@@ -8,7 +8,7 @@ readme = "README.md"
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = ">=3.6"
+python = ">=3.8"
 python-dotenv = "^0.14.0"
 "ruamel.yaml" = { version = "^0.16.10", optional = true }
 pydantic = { version = "^1.6.1", optional = true }
@@ -22,11 +22,10 @@ toml = ["toml"]
 all = ["ruamel.yaml", "pydantic", "toml"]
 
 [tool.poetry.dev-dependencies]
-pytest = "^6.0.0"
-black = "^19.10b0"
-pylint = "^2.5.3"
-pytest-cov = "^2.10.0"
-rope = "^0.17.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.3.4"
+pytest = "^8.1.1"
 
 [build-system]
 requires = ["poetry>=0.12"]

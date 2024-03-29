@@ -84,30 +84,24 @@ mort_=is an error
 
 def test_detects_value_format_invalid():
     assert (
-        (
-            typed_dotenv._get_value_format(
-                """
+        typed_dotenv._get_value_format(
+            """
 # values: jsoneee
 rick=is not moert
             """
-            )
         )
-        is None
-    )
+    ) is None
 
 
 def test_detects_no_value_format():
     assert (
-        (
-            typed_dotenv._get_value_format(
-                """
+        typed_dotenv._get_value_format(
+            """
 simply=keys
 without_any="values: comment"
             """
-            )
         )
-        is None
-    )
+    ) is None
 
 
 def test_parses_regular_dotenv():
@@ -127,6 +121,7 @@ def test_parses_regular_dotenv():
     assert result["A_EXPONENTIAL"] == "54e15"
     assert result["A_FLOAT"] == "544.54"
 
+
 def test_parses_toml_dotenv():
     result = typed_dotenv._parse(Path(__file__).parent / "toml.env")
     assert result["STRING"] == "String"
@@ -143,6 +138,7 @@ def test_parses_toml_dotenv():
     assert result["A_SEXAGECIMAL_INT"] == datetime.time(12, 34, 56)
     assert result["A_EXPONENTIAL"] == 54e15
     assert result["A_FLOAT"] == 544.54
+
 
 def test_parses_json_dotenv():
     result = typed_dotenv._parse(Path(__file__).parent / "json.env")
@@ -161,6 +157,7 @@ def test_parses_json_dotenv():
     assert result["A_EXPONENTIAL"] == 54e15
     assert result["A_FLOAT"] == 544.54
 
+
 def test_parses_python_literal_dotenv():
     result = typed_dotenv._parse(Path(__file__).parent / "python_literal.env")
     assert result["STRING"] == "String"
@@ -177,6 +174,7 @@ def test_parses_python_literal_dotenv():
     # assert result["A_SEXAGECIMAL_INT"] == "12:34:56"
     assert result["A_EXPONENTIAL"] == 54e15
     assert result["A_FLOAT"] == 544.54
+
 
 def test_parses_yaml_1_2_dotenv():
     result = typed_dotenv._parse(Path(__file__).parent / "yaml_1_2.env")
@@ -195,12 +193,17 @@ def test_parses_yaml_1_2_dotenv():
     assert result["A_EXPONENTIAL"] == 54e15
     assert result["A_FLOAT"] == 544.54
 
+
 def test_raises_exception_when_file_not_found():
     with raises(FileNotFoundError):
         typed_dotenv.load("unexistant_file")
-    
+
+    class A(BaseModel):
+        A: str
+
     with raises(FileNotFoundError):
-        typed_dotenv.load_into("unexistant_file")
+        typed_dotenv.load_into(A, filename="unexistant_file")
+
 
 def test_load_into():
     class ADotEnvModel(BaseModel):
@@ -212,6 +215,36 @@ def test_load_into():
         A_FLOAT: float
 
     result = typed_dotenv.load_into(ADotEnvModel, Path(__file__).parent / "toml.env")
+    assert isinstance(result, ADotEnvModel)
+    assert result.STRING == "String"
+    assert result.BOOLEAN_FALSE == False
+    assert result.AN_INT == 8593
+    assert result.A_SEXAGECIMAL_INT == datetime.time(12, 34, 56)
+    assert result.A_EXPONENTIAL == 54e15
+    assert result.A_FLOAT == 544.54
+
+
+def test_load_into_no_filename():
+    from os import environ
+
+    class ADotEnvModel(BaseModel):
+        STRING: str
+        BOOLEAN_FALSE: bool
+        AN_INT: int
+        A_SEXAGECIMAL_INT: datetime.time
+        A_EXPONENTIAL: int
+        A_FLOAT: float
+
+    environ["STRING"] = "String"
+    environ["BOOLEAN_FALSE"] = "False"
+    environ["AN_INT"] = "8593"
+    environ["A_SEXAGECIMAL_INT"] = "12:34:56"
+    environ["A_EXPONENTIAL"] = "54e15"
+    environ["A_FLOAT"] = "544.54"
+
+    print(environ)
+
+    result = typed_dotenv.load_into(ADotEnvModel, filename=None)
     assert isinstance(result, ADotEnvModel)
     assert result.STRING == "String"
     assert result.BOOLEAN_FALSE == False

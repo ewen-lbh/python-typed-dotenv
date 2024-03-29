@@ -1,7 +1,9 @@
+from __future__ import annotations
+
 __version__ = "1.0.1"
 from enum import Enum
 from pathlib import Path
-from typing import *
+from typing import Any, Optional, Union
 
 import dotenv
 from parse import parse as reverse_format
@@ -87,13 +89,16 @@ def coerce(raw_value: str, syntax: VALUE_FORMATS) -> Any:
 
         return ast.literal_eval(raw_value)
 
+    else:
+        raise ValueError(f"Unsupported syntax: {syntax}")
 
-def _parse(filename: Union[str, Path]) -> Dict[str, Any]:
+
+def _parse(filename: Union[str, Path]) -> dict[str, Any]:
     values_format = _get_value_format(Path(filename).read_text())
 
     bindings = dotenv.parser.parse_stream(Path(filename).open())
     # Remove comments...
-    bindings: List[dotenv.parser.Binding] = [b for b in bindings if b.key is not None]
+    bindings: list[dotenv.parser.Binding] = [b for b in bindings if b.key is not None]
     new_bindings = {}
 
     for binding in bindings:
@@ -106,7 +111,7 @@ def _parse(filename: Union[str, Path]) -> Dict[str, Any]:
     return new_bindings
 
 
-def load(filename: Union[str, Path] = ".env") -> Dict[str, Any]:
+def load(filename: Union[str, Path] = ".env") -> dict[str, Any]:
     if not Path(filename).exists():
         raise FileNotFoundError(f"File {filename!r} was not found")
 
@@ -116,7 +121,25 @@ def load(filename: Union[str, Path] = ".env") -> Dict[str, Any]:
 try:
     from pydantic import BaseModel
 
-    def load_into(into: BaseModel, filename: Union[str, Path] = ".env") -> BaseModel:
+    def load_into(
+        into: BaseModel, filename: Union[str, Path, None] = ".env"
+    ) -> BaseModel:
+        """
+        Load environment variables into a Pydantic model.
+        If filename is None, variables will be loaded from the environment and the values' syntax will always be 'YAML 1.2'.
+        """
+
+        if filename is None:
+            from os import environ
+
+            print(list(environ.keys()))
+            print(list(into.__fields__.keys()))
+            values = {
+                key: coerce(environ[key], syntax=VALUE_FORMATS.yaml_1_2)
+                for key in into.__fields__.keys()
+            }
+            return into(**values)
+
         if not Path(filename).exists():
             raise FileNotFoundError(f"File {filename!r} was not found")
 
