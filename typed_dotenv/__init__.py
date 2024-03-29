@@ -133,7 +133,7 @@ try:
             from os import environ
 
             values = {
-                key: coerce(environ[key], syntax=VALUE_FORMATS.yaml_1_2)
+                key: coerce(environ.get(key), syntax=VALUE_FORMATS.yaml_1_2)
                 for key in into.__fields__.keys()
             }
             return into(**values)
