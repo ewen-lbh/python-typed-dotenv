@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.2] - 2024-03-29
+
+### Fixed
+
+- Improve error message with `load_into()` when a environment variable is missing, instead of getting a KeyError, pydantic validation will fail on a None value
+
 ## [2.0.1] - 2024-03-29
 
 ### Fixed
@@ -45,7 +51,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `load_into()`
 - `load()`
 
-[Unreleased]: https://github.com/ewen-lbh/python-typed-dotenv/compare/v2.0.1...HEAD
+[Unreleased]: https://github.com/ewen-lbh/python-typed-dotenv/compare/v2.0.2...HEAD
+[2.0.2]: https://github.com/ewen-lbh/python-typed-dotenv/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/ewen-lbh/python-typed-dotenv/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/ewen-lbh/python-typed-dotenv/compare/v1.0.1...v2.0.0
 [1.0.1]: https://github.com/ewen-lbh/python-typed-dotenv/compare/v1.0.0...v1.0.1
